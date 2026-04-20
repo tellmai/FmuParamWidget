@@ -152,13 +152,13 @@ QVariant InternalParamModel::headerData(int section, Qt::Orientation orientation
     if (role == Qt::DisplayRole) {
         switch (section) {
         case ParamColumn:
-            return QString::fromUtf8("参数");
+            return tr("参数");
         case ValueColumn:
-            return QString::fromUtf8("值");
+            return tr("值");
         case UnitColumn:
-            return QString::fromUtf8("单位");
+            return tr("单位");
         case DescriptionColumn:
-            return QString::fromUtf8("描述");
+            return tr("描述");
         default:
             return QVariant();
         }

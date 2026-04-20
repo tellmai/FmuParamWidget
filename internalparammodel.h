@@ -5,7 +5,7 @@
 #include <QVector>
 
 #include "ParamItem.h"
-#include "parammodel.h"
+#include "inputparammodel.h"
 
 class InternalParamModel : public QAbstractItemModel
 {

@@ -35,7 +35,7 @@ void InternalParamEditorWidget::SetupUI()
     setFont(appFont);
 
     m_filterEdit = new QLineEdit(this);
-    m_filterEdit->setPlaceholderText(QString::fromUtf8("搜索"));
+    m_filterEdit->setPlaceholderText(tr("搜索"));
     QPalette filterPalette = m_filterEdit->palette();
     filterPalette.setColor(QPalette::Text, QColor(102, 102, 102));
     filterPalette.setColor(QPalette::PlaceholderText, QColor(169, 169, 169));

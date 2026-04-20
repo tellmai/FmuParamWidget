@@ -4,7 +4,7 @@
 #include <QHeaderView>
 #include <QSet>
 
-#include "parammodel.h"
+#include "inputparammodel.h"
 
 // 自定义表头负责绘制排序按钮、列宽热区，并区分点击排序和拖拽改列宽。
 class CustomHeaderView : public QHeaderView

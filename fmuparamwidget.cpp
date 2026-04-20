@@ -1,7 +1,7 @@
 #include "fmuparamwidget.h"
 
 #include "internalparameditorwidget.h"
-#include "parameditorwidget.h"
+#include "inputparameditorwidget.h"
 
 #include <QAction>
 #include <QApplication>
@@ -156,12 +156,33 @@ FmuParamWidget::FmuParamWidget(QWidget *parent)
       m_inputParamEditor(nullptr)
 {
     SetupUI();
+    SetSimulationModeRadiosVisible(false);
+}
+
+void FmuParamWidget::SetCoSimulationRadioVisible(bool visible)
+{
+    if (m_coSimulationRadio) {
+        m_coSimulationRadio->setVisible(visible);
+    }
+}
+
+void FmuParamWidget::SetModelExchangeRadioVisible(bool visible)
+{
+    if (m_modelExchangeRadio) {
+        m_modelExchangeRadio->setVisible(visible);
+    }
+}
+
+void FmuParamWidget::SetSimulationModeRadiosVisible(bool visible)
+{
+    SetCoSimulationRadioVisible(visible);
+    SetModelExchangeRadioVisible(visible);
 }
 
 void FmuParamWidget::SetupUI()
 {
     setObjectName(QStringLiteral("FmuParamWidget"));
-    setWindowTitle(QString::fromUtf8("FMU参数设置"));
+    setWindowTitle(tr("FMU参数设置"));
 
     QFont appFont(QStringLiteral("Microsoft YaHei UI"));
     appFont.setPixelSize(14);
@@ -182,7 +203,7 @@ void FmuParamWidget::SetupUI()
     labelLayout->setContentsMargins(0, 0, 0, 0);
     labelLayout->setSpacing(6);
 
-    m_modelPathLabel = new QLabel(QString::fromUtf8("模型路径"), pathArea);
+    m_modelPathLabel = new QLabel(tr("模型路径"), pathArea);
     m_modelPathLabel->setObjectName(QStringLiteral("ModelPathLabel"));
 
     m_helpLabel = new QLabel(QStringLiteral("?"), pathArea);
@@ -204,9 +225,10 @@ void FmuParamWidget::SetupUI()
     m_modelPathEdit->setFixedHeight(30);
     QAction *browseAction = m_modelPathEdit->addAction(CreateFolderIcon(), QLineEdit::TrailingPosition);
 
-    m_coSimulationRadio = new QRadioButton(QString::fromUtf8("联合仿真"), pathArea);
-    m_modelExchangeRadio = new QRadioButton(QString::fromUtf8("模型交换"), pathArea);
+    m_coSimulationRadio = new QRadioButton(tr("联合仿真"), pathArea);
+    m_modelExchangeRadio = new QRadioButton(tr("模型交换"), pathArea);
     m_coSimulationRadio->setChecked(true);
+    SetSimulationModeRadiosVisible(false);
 
     pathRowLayout->addWidget(m_modelPathEdit, 1);
     pathRowLayout->addWidget(m_coSimulationRadio);
@@ -344,16 +366,16 @@ void FmuParamWidget::CreateSections(QVBoxLayout *sectionsLayout)
     m_internalParamEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_internalParamEditor->setFixedHeight(292);
 
-    m_internalSection = new FmuSectionWidget(QString::fromUtf8("内部参数"), m_internalParamEditor, this);
-    m_simulationSection = new FmuSectionWidget(QString::fromUtf8("仿真"), CreateBlankContent(92), this);
+    m_internalSection = new FmuSectionWidget(tr("内部参数"), m_internalParamEditor, this);
+    m_simulationSection = new FmuSectionWidget(tr("仿真"), CreateBlankContent(92), this);
 
     m_inputParamEditor = new InputParamEditorWidget(this);
     m_inputParamEditor->setMinimumSize(0, 0);
     m_inputParamEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_inputParamEditor->setFixedHeight(334);
 
-    m_inputSection = new FmuSectionWidget(QString::fromUtf8("输入"), m_inputParamEditor, this);
-    m_outputSection = new FmuSectionWidget(QString::fromUtf8("输出"), CreateBlankContent(92), this);
+    m_inputSection = new FmuSectionWidget(tr("输入"), m_inputParamEditor, this);
+    m_outputSection = new FmuSectionWidget(tr("输出"), CreateBlankContent(92), this);
 
     sectionsLayout->addWidget(m_internalSection);
     sectionsLayout->addWidget(m_simulationSection);
@@ -400,11 +422,12 @@ void FmuParamWidget::OnBrowseModelPathTriggered()
 {
     const QString filePath = QFileDialog::getOpenFileName(
         this,
-        QString::fromUtf8("选择FMU模型"),
+        tr("选择FMU模型"),
         QString(),
-        QString::fromUtf8("FMU模型 (*.fmu);;所有文件 (*.*)"));
+        tr("FMU模型 (*.fmu);;所有文件 (*.*)"));
 
     if (!filePath.isEmpty()) {
         m_modelPathEdit->setText(filePath);
+        SetSimulationModeRadiosVisible(true);
     }
 }

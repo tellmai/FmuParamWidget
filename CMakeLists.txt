@@ -22,16 +22,17 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(FmuParamWidget
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        paramsetwidget.h paramsetwidget.cpp
         fmuparamwidget.h fmuparamwidget.cpp
         borderedtreeview.h borderedtreeview.cpp
 
-        parameditorwidget.h parameditorwidget.cpp
+        inputparameditorwidget.h inputparameditorwidget.cpp
         internalparameditorwidget.h internalparameditorwidget.cpp
         internalparammodel.h internalparammodel.cpp
         internalparamdelegate.h internalparamdelegate.cpp
         ParamItem.h
-        parammodel.h parammodel.cpp
-        paramdelegate.h paramdelegate.cpp
+        inputparammodel.h inputparammodel.cpp
+        inputparamdelegate.h inputparamdelegate.cpp
         customheaderview.h customheaderview.cpp
         res.qrc
 

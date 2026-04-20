@@ -49,6 +49,10 @@ class FmuParamWidget : public QWidget
 public:
     explicit FmuParamWidget(QWidget *parent = nullptr);
 
+    void SetCoSimulationRadioVisible(bool visible);
+    void SetModelExchangeRadioVisible(bool visible);
+    void SetSimulationModeRadiosVisible(bool visible);
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
 

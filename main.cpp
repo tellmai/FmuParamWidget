@@ -1,13 +1,13 @@
 #include <QApplication>
 
-#include "fmuparamwidget.h"
+#include "paramsetwidget.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     app.setStyle("Fusion");
 
-    FmuParamWidget widget;
+    ParamSetWidget widget;
     widget.show();
 
     return app.exec();
