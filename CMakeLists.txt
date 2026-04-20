@@ -33,7 +33,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ParamItem.h
         inputparammodel.h inputparammodel.cpp
         inputparamdelegate.h inputparamdelegate.cpp
-        customheaderview.h customheaderview.cpp
+        CustomHeaderView.h customheaderview.cpp
         res.qrc
 
 
