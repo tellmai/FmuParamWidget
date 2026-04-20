@@ -1,0 +1,12 @@
+CMakeLists.txt.user
+build/
+cmake-build-*/
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.out

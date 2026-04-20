@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>svg/btn_routebar_ right_normal_16.svg</file>
+        <file>svg/btn_workspace_down_normal_16.svg</file>
+    </qresource>
+</RCC>
