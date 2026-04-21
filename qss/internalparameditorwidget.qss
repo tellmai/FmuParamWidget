@@ -1,0 +1,78 @@
+InternalParamEditorWidget {
+    background-color: #ffffff;
+}
+
+QLineEdit {
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 0 8px;
+    color: #666666;
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI";
+    font-size: 14px;
+    font-weight: 400;
+    placeholder-text-color: #a9a9a9;
+    selection-background-color: #2f7ed8;
+}
+
+QLineEdit:focus {
+    border-color: #cccccc;
+}
+
+QTreeView {
+    border: 1px solid #cccccc;
+    background-color: #eeeeee;
+    outline: none;
+    show-decoration-selected: 0;
+    font-size: 14px;
+}
+
+QTreeView::item {
+    padding: 0;
+    border: none;
+}
+
+QTreeView::item:selected {
+    background: transparent;
+    color: #545454;
+}
+
+QScrollBar:horizontal,
+QScrollBar:vertical {
+    background: #ffffff;
+    border: none;
+    margin: 0;
+}
+
+QScrollBar:horizontal {
+    height: 8px;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #e1e1e1;
+    border-radius: 4px;
+    margin: 2px 0;
+    min-width: 24px;
+}
+
+QScrollBar::handle:vertical {
+    background: #e1e1e1;
+    border-radius: 4px;
+    margin: 0 2px;
+    min-height: 24px;
+}
+
+QScrollBar::add-line,
+QScrollBar::sub-line {
+    width: 0;
+    height: 0;
+}
+
+QScrollBar::add-page,
+QScrollBar::sub-page {
+    background: #ffffff;
+}

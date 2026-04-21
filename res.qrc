@@ -3,4 +3,10 @@
         <file>svg/btn_routebar_ right_normal_16.svg</file>
         <file>svg/btn_workspace_down_normal_16.svg</file>
     </qresource>
+    <qresource prefix="/qss">
+        <file alias="fmuparamwidget.qss">qss/fmuparamwidget.qss</file>
+        <file alias="inputparameditorwidget.qss">qss/inputparameditorwidget.qss</file>
+        <file alias="internalparameditorwidget.qss">qss/internalparameditorwidget.qss</file>
+        <file alias="paramsetwidget.qss">qss/paramsetwidget.qss</file>
+    </qresource>
 </RCC>

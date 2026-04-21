@@ -2,6 +2,7 @@
 
 #include "internalparameditorwidget.h"
 #include "inputparameditorwidget.h"
+#include "stylesheetloader.h"
 
 #include <QAction>
 #include <QApplication>
@@ -246,77 +247,7 @@ void FmuParamWidget::SetupUI()
     mainLayout->addLayout(sectionsLayout);
     mainLayout->addStretch();
 
-    setStyleSheet(QStringLiteral(R"(
-        QWidget#FmuParamWidget {
-            background: #ffffff;
-            color: #4d4d4d;
-            font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI";
-            font-size: 14px;
-        }
-        QLabel#ModelPathLabel {
-            color: #3f3f3f;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        QLabel#HelpLabel {
-            background: #d7d7d7;
-            border-radius: 7px;
-            color: #ffffff;
-            font-size: 10px;
-            font-weight: 600;
-        }
-        QLineEdit#ModelPathEdit {
-            border: 1px solid #cfcfcf;
-            border-radius: 2px;
-            background: #ffffff;
-            color: #555555;
-            padding: 0 8px;
-            selection-background-color: #2f6fab;
-        }
-        QLineEdit#ModelPathEdit:focus {
-            border-color: #b8b8b8;
-        }
-        QRadioButton {
-            color: #4d4d4d;
-            spacing: 4px;
-        }
-        QRadioButton::indicator {
-            width: 14px;
-            height: 14px;
-            border: 1px solid #c8c8c8;
-            border-radius: 7px;
-            background: #ffffff;
-        }
-        QRadioButton::indicator:checked {
-            border: 1px solid #315f9e;
-            background: qradialgradient(cx:0.5, cy:0.5, radius:0.55,
-                                        fx:0.5, fy:0.5,
-                                        stop:0 #315f9e,
-                                        stop:0.42 #315f9e,
-                                        stop:0.46 #ffffff,
-                                        stop:1 #ffffff);
-        }
-        QWidget#SectionHeader {
-            min-height: 24px;
-            background: transparent;
-        }
-        QToolButton#SectionArrow {
-            border: none;
-            background: transparent;
-            padding: 0;
-        }
-        QLabel#SectionTitle {
-            color: #4f4f4f;
-            font-size: 15px;
-            font-weight: 500;
-        }
-        QWidget#SectionContent {
-            background: transparent;
-        }
-        QWidget#BlankSectionContent {
-            background: #ffffff;
-        }
-    )"));
+    setStyleSheet(LoadStyleSheet(QStringLiteral(":/qss/fmuparamwidget.qss")));
 
     SetupConnections(browseAction);
 

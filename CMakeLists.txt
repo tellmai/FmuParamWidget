@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         paramsetwidget.h paramsetwidget.cpp
+        stylesheetloader.h stylesheetloader.cpp
         fmuparamwidget.h fmuparamwidget.cpp
         borderedtreeview.h borderedtreeview.cpp
 

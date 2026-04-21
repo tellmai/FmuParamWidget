@@ -2,6 +2,7 @@
 
 #include "ParamItem.h"
 #include "borderedtreeview.h"
+#include "stylesheetloader.h"
 
 #include <QFont>
 #include <QHeaderView>
@@ -43,10 +44,9 @@ void InternalParamEditorWidget::SetupUI()
     m_filterEdit->setClearButtonEnabled(true);
     m_filterEdit->addAction(CreateSearchIcon(), QLineEdit::LeadingPosition);
     m_filterEdit->setTextMargins(4, 0, 8, 0);
-    m_filterEdit->setFixedHeight(28);
+    m_filterEdit->setFixedSize(304, 24);
     m_filterEdit->setMinimumWidth(0);
-    m_filterEdit->setMaximumWidth(500);
-    m_filterEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_filterEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_treeView = new BorderedTreeView(this);
     m_model = new InternalParamModel(this);
@@ -74,71 +74,7 @@ void InternalParamEditorWidget::SetupUI()
     m_treeView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_treeView->setAutoScroll(false);
 
-    setStyleSheet(QStringLiteral(R"(
-        InternalParamEditorWidget {
-            background-color: #ffffff;
-        }
-        QLineEdit {
-            border: 1px solid #d0d0d0;
-            border-radius: 3px;
-            padding: 0 8px;
-            background-color: #ffffff;
-            color: #666666;
-            font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI";
-            font-size: 14px;
-            font-weight: 400;
-            placeholder-text-color: #a9a9a9;
-            selection-background-color: #2f7ed8;
-        }
-        QLineEdit:focus {
-            border-color: #b8b8b8;
-        }
-        QTreeView {
-            border: 1px solid #cccccc;
-            background-color: #eeeeee;
-            outline: none;
-            show-decoration-selected: 0;
-            font-size: 14px;
-        }
-        QTreeView::item {
-            padding: 0;
-            border: none;
-        }
-        QTreeView::item:selected {
-            background: transparent;
-            color: #545454;
-        }
-        QScrollBar:horizontal, QScrollBar:vertical {
-            background: #ffffff;
-            border: none;
-            margin: 0;
-        }
-        QScrollBar:horizontal {
-            height: 8px;
-        }
-        QScrollBar:vertical {
-            width: 8px;
-        }
-        QScrollBar::handle:horizontal {
-            background: #e1e1e1;
-            border-radius: 4px;
-            margin: 2px 0;
-            min-width: 24px;
-        }
-        QScrollBar::handle:vertical {
-            background: #e1e1e1;
-            border-radius: 4px;
-            margin: 0 2px;
-            min-height: 24px;
-        }
-        QScrollBar::add-line, QScrollBar::sub-line {
-            width: 0;
-            height: 0;
-        }
-        QScrollBar::add-page, QScrollBar::sub-page {
-            background: #ffffff;
-        }
-    )"));
+    setStyleSheet(LoadStyleSheet(QStringLiteral(":/qss/internalparameditorwidget.qss")));
 
     mainLayout->addWidget(m_filterEdit);
     mainLayout->addWidget(m_treeView);
@@ -324,7 +260,7 @@ QIcon InternalParamEditorWidget::CreateSearchIcon() const
 
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setPen(QPen(QColor(174, 174, 174), 1.4, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(QColor(103, 103, 103), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.drawEllipse(QRectF(4.0, 4.0, 7.5, 7.5));
     painter.drawLine(QPointF(10.5, 10.5), QPointF(14.5, 14.5));
 
