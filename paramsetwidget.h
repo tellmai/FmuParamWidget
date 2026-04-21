@@ -27,6 +27,12 @@ signals:
     void Applied();
     void Canceled();
 
+private slots:
+    void OnHelpButtonClicked();
+    void OnOkButtonClicked();
+    void OnApplyButtonClicked();
+    void OnCancelButtonClicked();
+
 private:
     void SetupUI();
     QWidget *CreateModuleSummaryWidget();

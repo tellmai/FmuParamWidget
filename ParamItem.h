@@ -7,7 +7,7 @@
 #include <QVector>
 #include <QtAlgorithms>
 
-// 单元格编辑器类型，m_delegate 根据它创建不同的编辑控件。
+// 单元格编辑器类型，delegate 会根据它创建不同的编辑控件。（TODO需要根据仿真具体的数据类型修改）
 enum class ParamDataType {
     LineEdit,
     CheckBox,
@@ -16,7 +16,7 @@ enum class ParamDataType {
     DoubleSpinBox
 };
 
-// FMU 起始值的语义类型，用于保留后续按类型排序的扩展能力。
+// FMU 参数值的语义类型，用于值列排序时先按类型分组，再按具体值排序。
 enum class FmuValueType {
     Boolean,
     Int8,
@@ -33,20 +33,34 @@ enum class FmuValueType {
 };
 
 struct ParamItem {
+    // 参数名称，对应表格中的“名称”或“参数”列。
     QString m_param;
+    // 参数当前值，对应输入参数的“开始”列或内部参数的“值”列。
     QString m_value;
+    // 参数单位，对应表格中的“单位”列。
     QString m_unit;
+    // 参数描述，对应内部参数表格中的“描述”列。
     QString m_description;
+    // 是否为分组/标题节点；标题节点一般不可编辑，可包含子节点。
     bool m_isSectionHeader;
+    // 当前节点是否展开；排序、过滤或刷新视图后用它恢复展开状态。
     bool m_isExpanded;
+    // 预留的斜坡/序号索引字段；没有索引时使用 -1。
     int m_rampIndex;
+    // 当前节点的值单元格是否允许编辑。
     bool m_editable;
+    // 值单元格进入编辑态时使用的编辑器类型。
     ParamDataType m_dataType;
+    // 输入参数“可见性”列的勾选状态。
     bool m_visible;
+    // FMU 值的语义类型，用于按类型和值进行排序。
     FmuValueType m_valueType;
+    // 子节点列表，用于构造多级参数树。
     QVector<ParamItem*> m_children;
-    ParamItem *m_parentItem;  // 标准树模型需要反向找到父节点。
-    int m_originalOrder;      // 默认排序时恢复同级节点的初始顺序。
+    // 父节点指针，QAbstractItemModel::parent() 需要通过它向上查找。
+    ParamItem *m_parentItem;
+    // 同级节点加载时的初始顺序，默认排序时用它恢复原始顺序。
+    int m_originalOrder;
 
     ParamItem(const QString &p = QString(),
               const QString &v = QString(),
@@ -85,7 +99,7 @@ struct ParamItem {
             return;
         }
 
-        // 在插入时维护父指针和默认顺序，避免排序后丢失层级关系。
+        // 插入时维护父指针和默认顺序，避免排序后丢失层级关系。
         child->m_parentItem = this;
         child->m_originalOrder = m_children.size();
         m_children.append(child);
@@ -138,7 +152,7 @@ struct ParamItem {
 
     static ParamItem *FromJson(const QJsonObject &json)
     {
-        // 旧数据可能没有 valueType 字段，因此按编辑器类型推导一个默认类型。
+        // 旧数据可能没有 valueType 字段，因此按编辑器类型推导默认类型。
         const auto editorType = static_cast<ParamDataType>(json["dataType"].toInt(0));
         const auto fmuType = json.contains("valueType")
             ? static_cast<FmuValueType>(json["valueType"].toInt(static_cast<int>(DefaultValueTypeFor(editorType))))

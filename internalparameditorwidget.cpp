@@ -10,6 +10,8 @@
 #include <QPalette>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <QShowEvent>
+#include <QTimer>
 #include <QVBoxLayout>
 
 InternalParamEditorWidget::InternalParamEditorWidget(QWidget *parent)
@@ -115,6 +117,15 @@ void InternalParamEditorWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     ResizeColumnsToAvailableWidth();
+}
+
+void InternalParamEditorWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    QTimer::singleShot(0, this, [this]() {
+        ResizeColumnsToAvailableWidth();
+    });
 }
 
 void InternalParamEditorWidget::ResizeColumnsToAvailableWidth()

@@ -317,10 +317,34 @@ QWidget *ParamSetWidget::CreateButtonBar()
     buttonLayout->addWidget(applyButton);
     buttonLayout->addWidget(cancelButton);
 
-    connect(helpButton, &QPushButton::clicked, this, &ParamSetWidget::HelpRequested);
-    connect(okButton, &QPushButton::clicked, this, &ParamSetWidget::Accepted);
-    connect(applyButton, &QPushButton::clicked, this, &ParamSetWidget::Applied);
-    connect(cancelButton, &QPushButton::clicked, this, &ParamSetWidget::Canceled);
+    connect(helpButton, &QPushButton::clicked, this, &ParamSetWidget::OnHelpButtonClicked);
+    connect(okButton, &QPushButton::clicked, this, &ParamSetWidget::OnOkButtonClicked);
+    connect(applyButton, &QPushButton::clicked, this, &ParamSetWidget::OnApplyButtonClicked);
+    connect(cancelButton, &QPushButton::clicked, this, &ParamSetWidget::OnCancelButtonClicked);
 
     return buttonBar;
+}
+
+void ParamSetWidget::OnHelpButtonClicked()
+{
+    emit HelpRequested();
+    qDebug() << "OnHelpButtonClicked---";
+}
+
+void ParamSetWidget::OnOkButtonClicked()
+{
+    emit Accepted();
+    qDebug() << "OnOkButtonClicked---";
+}
+
+void ParamSetWidget::OnApplyButtonClicked()
+{
+    emit Applied();
+    qDebug() << "OnApplyButtonClicked---";
+}
+
+void ParamSetWidget::OnCancelButtonClicked()
+{
+    emit Canceled();
+    this->close();
 }

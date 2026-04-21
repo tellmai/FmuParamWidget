@@ -13,6 +13,7 @@
 
 QT_BEGIN_NAMESPACE
 class QResizeEvent;
+class QShowEvent;
 QT_END_NAMESPACE
 
 class InternalParamEditorWidget : public QWidget
@@ -27,6 +28,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void OnExpandClicked(const QModelIndex &index);

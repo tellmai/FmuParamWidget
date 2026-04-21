@@ -126,30 +126,30 @@ QPushButton#PrimaryButton:pressed {
 
 QScrollBar:horizontal,
 QScrollBar:vertical {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.6);
     border: none;
     margin: 0;
 }
 
 QScrollBar:horizontal {
-    height: 8px;
+    height: 12px;
 }
 
 QScrollBar:vertical {
-    width: 8px;
+    width: 12px;
 }
 
 QScrollBar::handle:horizontal {
     background: #e1e1e1;
-    border-radius: 4px;
-    margin: 2px 0;
+    border-radius: 2px;
+    margin: 4px 0;
     min-width: 24px;
 }
 
 QScrollBar::handle:vertical {
     background: #e1e1e1;
-    border-radius: 4px;
-    margin: 0 2px;
+    border-radius: 2px;
+    margin: 0 4px;
     min-height: 24px;
 }
 
@@ -161,5 +161,5 @@ QScrollBar::sub-line {
 
 QScrollBar::add-page,
 QScrollBar::sub-page {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.6);
 }

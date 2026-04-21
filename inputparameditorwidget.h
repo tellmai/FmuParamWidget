@@ -15,6 +15,7 @@
 
 QT_BEGIN_NAMESPACE
 class QResizeEvent;
+class QShowEvent;
 QT_END_NAMESPACE
 
 // 组合搜索框、表头、树模型和 m_delegate 的输入参数编辑主控件。
@@ -39,6 +40,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void OnExpandClicked(const QModelIndex &index);

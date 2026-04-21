@@ -6,9 +6,10 @@ QWidget#FmuParamWidget {
 }
 
 QLabel#ModelPathLabel {
-    color: #3f3f3f;
+    font-family: SourceHanSansCN-Regular;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
+    color: #4d4d4e;
 }
 
 QLabel#HelpLabel {

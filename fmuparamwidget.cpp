@@ -157,7 +157,6 @@ FmuParamWidget::FmuParamWidget(QWidget *parent)
       m_inputParamEditor(nullptr)
 {
     SetupUI();
-    SetSimulationModeRadiosVisible(false);
 }
 
 void FmuParamWidget::SetCoSimulationRadioVisible(bool visible)
@@ -229,7 +228,7 @@ void FmuParamWidget::SetupUI()
     m_coSimulationRadio = new QRadioButton(tr("联合仿真"), pathArea);
     m_modelExchangeRadio = new QRadioButton(tr("模型交换"), pathArea);
     m_coSimulationRadio->setChecked(true);
-    SetSimulationModeRadiosVisible(false);
+    SetSimulationModeRadiosVisible(true);
 
     pathRowLayout->addWidget(m_modelPathEdit, 1);
     pathRowLayout->addWidget(m_coSimulationRadio);

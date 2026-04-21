@@ -14,7 +14,9 @@
 #include <QPalette>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <QShowEvent>
 #include <QTextStream>
+#include <QTimer>
 #include <QVBoxLayout>
 
 InputParamEditorWidget::InputParamEditorWidget(QWidget *parent)
@@ -94,6 +96,15 @@ void InputParamEditorWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     ResizeColumnsToAvailableWidth();
+}
+
+void InputParamEditorWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    QTimer::singleShot(0, this, [this]() {
+        ResizeColumnsToAvailableWidth();
+    });
 }
 
 void InputParamEditorWidget::ResizeColumnsToAvailableWidth()
