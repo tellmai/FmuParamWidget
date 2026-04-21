@@ -93,6 +93,10 @@ struct ParamItem {
         qDeleteAll(m_children);
     }
 
+    /**
+     * @brief AppendChild
+     * @param child 需要追加的子参数节点。
+     */
     void AppendChild(ParamItem *child)
     {
         if (!child) {
@@ -105,6 +109,11 @@ struct ParamItem {
         m_children.append(child);
     }
 
+    /**
+     * @brief DefaultValueTypeFor
+     * @param editorType 单元格编辑器类型。
+     * @return 编辑器类型对应的默认 FMU 值类型。
+     */
     static FmuValueType DefaultValueTypeFor(ParamDataType editorType)
     {
         switch (editorType) {
@@ -122,6 +131,10 @@ struct ParamItem {
         }
     }
 
+    /**
+     * @brief ToJson
+     * @return 当前参数节点及其子节点的 JSON 对象。
+     */
     QJsonObject ToJson() const
     {
         QJsonObject json;
@@ -150,6 +163,11 @@ struct ParamItem {
         return json;
     }
 
+    /**
+     * @brief FromJson
+     * @param json 用于创建参数节点的 JSON 对象。
+     * @return 根据 JSON 创建的参数节点。
+     */
     static ParamItem *FromJson(const QJsonObject &json)
     {
         // 旧数据可能没有 valueType 字段，因此按编辑器类型推导默认类型。

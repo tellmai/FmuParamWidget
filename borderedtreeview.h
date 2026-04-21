@@ -13,6 +13,10 @@ public:
     explicit BorderedTreeView(QWidget *parent = nullptr);
 
 protected:
+    /**
+     * @brief paintEvent
+     * @param event 绘制事件。
+     */
     void paintEvent(QPaintEvent *event) override;
 };
 

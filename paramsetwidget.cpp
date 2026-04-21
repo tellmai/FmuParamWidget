@@ -3,6 +3,7 @@
 #include "fmuparamwidget.h"
 #include "stylesheetloader.h"
 
+#include <QDebug>
 #include <QEvent>
 #include <QFrame>
 #include <QHBoxLayout>
@@ -16,6 +17,14 @@
 #include <QTextEdit>
 #include <QToolButton>
 #include <QVBoxLayout>
+
+ParamCategoryContentData::ParamCategoryContentData(const QString &typeValue,
+                                                   const QStringList &titleValues,
+                                                   const QVariantMap &propertyValues)
+    : type(typeValue),
+      titles(titleValues),
+      properties(propertyValues)
+{}
 
 class ParamCategoryArrowButton : public QToolButton
 {
@@ -53,16 +62,37 @@ public:
           m_titleLabel(nullptr),
           m_headerWidget(nullptr),
           m_contentContainer(nullptr),
-          m_contentWidget(contentWidget),
+          m_contentLayout(nullptr),
+          m_contentWidget(nullptr),
           m_expanded(true)
     {
-        if (!m_contentWidget) {
-            m_contentWidget = new QWidget(this);
+        SetupUI(title);
+        SetContentWidget(contentWidget);
+        SetExpanded(true);
+    }
+
+    void SetContentWidget(QWidget *contentWidget)
+    {
+        if (!m_contentLayout) {
+            return;
         }
 
-        m_contentWidget->setParent(this);
-        SetupUI(title);
-        SetExpanded(true);
+        if (!contentWidget) {
+            contentWidget = new QWidget(m_contentContainer);
+        }
+
+        if (m_contentWidget == contentWidget) {
+            return;
+        }
+
+        if (m_contentWidget) {
+            m_contentLayout->removeWidget(m_contentWidget);
+            m_contentWidget->deleteLater();
+        }
+
+        m_contentWidget = contentWidget;
+        m_contentWidget->setParent(m_contentContainer);
+        m_contentLayout->addWidget(m_contentWidget);
     }
 
     void SetExpanded(bool expanded)
@@ -122,10 +152,9 @@ private:
 
         m_contentContainer = new QWidget(this);
         m_contentContainer->setObjectName(QStringLiteral("CategoryContent"));
-        QVBoxLayout *contentLayout = new QVBoxLayout(m_contentContainer);
-        contentLayout->setContentsMargins(0, 0, 0, 0);
-        contentLayout->setSpacing(0);
-        contentLayout->addWidget(m_contentWidget);
+        m_contentLayout = new QVBoxLayout(m_contentContainer);
+        m_contentLayout->setContentsMargins(0, 0, 0, 0);
+        m_contentLayout->setSpacing(0);
 
         mainLayout->addWidget(m_headerWidget);
         mainLayout->addWidget(m_contentContainer);
@@ -139,20 +168,25 @@ private:
     QLabel *m_titleLabel;
     QWidget *m_headerWidget;
     QWidget *m_contentContainer;
+    QVBoxLayout *m_contentLayout;
     QWidget *m_contentWidget;
     bool m_expanded;
 };
 
 ParamSetWidget::ParamSetWidget(QWidget *parent)
+    : ParamSetWidget(ParamCategoryContentData(), parent)
+{}
+
+ParamSetWidget::ParamSetWidget(const ParamCategoryContentData &categoryData, QWidget *parent)
     : QWidget(parent),
       m_moduleImageLabel(nullptr),
       m_moduleNameLabel(nullptr),
       m_moduleDescriptionEdit(nullptr),
-      m_fmuParamWidget(nullptr),
-      m_secondCategoryPlaceholder(nullptr)
+      m_contentWidget(nullptr),
+      m_contentLayout(nullptr),
+      m_fmuParamWidget(nullptr)
 {
-    SetupUI();
-
+    SetupUI(categoryData);
     SetModuleImage("C:\\baltamatica\\library\\Baltamulink\\maths\\abs\\abs.svg");
 }
 
@@ -192,7 +226,12 @@ void ParamSetWidget::SetModuleDescription(const QString &description)
     }
 }
 
-void ParamSetWidget::SetupUI()
+void ParamSetWidget::SetCategoryContentData(const ParamCategoryContentData &categoryData)
+{
+    BuildCategoryWidgets(categoryData);
+}
+
+void ParamSetWidget::SetupUI(const ParamCategoryContentData &categoryData)
 {
     setObjectName(QStringLiteral("ParamSetWidget"));
     setWindowTitle(tr("模块参数"));
@@ -208,30 +247,17 @@ void ParamSetWidget::SetupUI()
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    QWidget *contentWidget = new QWidget(scrollArea);
-    contentWidget->setObjectName(QStringLiteral("ParamSetContent"));
-    QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
-    contentLayout->setContentsMargins(0, 0, 0, 0);
-    contentLayout->setSpacing(0);
+    m_contentWidget = new QWidget(scrollArea);
+    m_contentWidget->setObjectName(QStringLiteral("ParamSetContent"));
+    m_contentLayout = new QVBoxLayout(m_contentWidget);
+    m_contentLayout->setContentsMargins(0, 0, 0, 0);
+    m_contentLayout->setSpacing(0);
 
-    m_fmuParamWidget = new FmuParamWidget(contentWidget);
-    m_fmuParamWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_contentLayout->addWidget(CreateModuleSummaryWidget());
+    BuildCategoryWidgets(categoryData);
+    m_contentLayout->addStretch();
 
-    m_secondCategoryPlaceholder = CreateSecondCategoryPlaceholder();
-
-    ParamCategoryWidget *firstCategory = new ParamCategoryWidget(tr("一级分类"),
-                                                                 m_fmuParamWidget,
-                                                                 contentWidget);
-    ParamCategoryWidget *secondCategory = new ParamCategoryWidget(tr("二级分类"),
-                                                                  m_secondCategoryPlaceholder,
-                                                                  contentWidget);
-
-    contentLayout->addWidget(CreateModuleSummaryWidget());
-    contentLayout->addWidget(firstCategory);
-    contentLayout->addWidget(secondCategory);
-    contentLayout->addStretch();
-
-    scrollArea->setWidget(contentWidget);
+    scrollArea->setWidget(m_contentWidget);
 
     mainLayout->addWidget(scrollArea);
     mainLayout->addWidget(CreateButtonBar());
@@ -287,13 +313,51 @@ QWidget *ParamSetWidget::CreateModuleSummaryWidget()
     return summaryWidget;
 }
 
-QWidget *ParamSetWidget::CreateSecondCategoryPlaceholder() const
+ParamCategoryContentData ParamSetWidget::DefaultCategoryContentData() const
 {
-    QWidget *placeholder = new QWidget();
-    placeholder->setObjectName(QStringLiteral("SecondCategoryPlaceholder"));
-    placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    placeholder->setMinimumHeight(220);
-    return placeholder;
+    return ParamCategoryContentData(QString(), QStringList{tr("一级分类"), tr("二级分类")});
+}
+
+ParamCategoryContentData ParamSetWidget::NormalizeCategoryContentData(const ParamCategoryContentData &categoryData) const
+{
+    ParamCategoryContentData normalizedData = categoryData;
+    if (normalizedData.titles.isEmpty()) {
+        normalizedData = DefaultCategoryContentData();
+    }
+
+    for (int index = 0; index < normalizedData.titles.size(); ++index) {
+        if (normalizedData.titles.at(index).isEmpty()) {
+            normalizedData.titles[index] = index == 0
+                ? tr("一级分类")
+                : (index == 1 ? tr("二级分类") : tr("分类%1").arg(index + 1));
+        }
+    }
+
+    return normalizedData;
+}
+
+ParamCategoryWidget *ParamSetWidget::CreateCategoryWidget(const QString &title,
+                                                          QWidget *contentWidget,
+                                                          QWidget *parent)
+{
+    return new ParamCategoryWidget(title, contentWidget, parent);
+}
+
+QWidget *ParamSetWidget::CreateTypedContentWidget(const ParamCategoryContentData &categoryData, QWidget *parent)
+{
+    Q_UNUSED(categoryData.properties);
+
+    const QString type = categoryData.type.trimmed().toLower();
+    if (type == QStringLiteral("fmu")) {
+        FmuParamWidget *fmuWidget = new FmuParamWidget(parent);
+        fmuWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        if (!m_fmuParamWidget) {
+            m_fmuParamWidget = fmuWidget;
+        }
+        return fmuWidget;
+    }
+
+    return nullptr;
 }
 
 QWidget *ParamSetWidget::CreateButtonBar()
@@ -323,6 +387,44 @@ QWidget *ParamSetWidget::CreateButtonBar()
     connect(cancelButton, &QPushButton::clicked, this, &ParamSetWidget::OnCancelButtonClicked);
 
     return buttonBar;
+}
+
+void ParamSetWidget::BuildCategoryWidgets(const ParamCategoryContentData &categoryData)
+{
+    if (!m_contentLayout || !m_contentWidget) {
+        return;
+    }
+
+    ClearCategoryWidgets();
+    m_fmuParamWidget = nullptr;
+
+    const ParamCategoryContentData normalizedData = NormalizeCategoryContentData(categoryData);
+    int insertIndex = m_contentLayout->count();
+    if (insertIndex > 0 && m_contentLayout->itemAt(insertIndex - 1)->spacerItem()) {
+        --insertIndex;
+    }
+
+    for (int index = 0; index < normalizedData.titles.size(); ++index) {
+        QWidget *categoryContent = index == 0 ? CreateTypedContentWidget(normalizedData, m_contentWidget) : nullptr;
+        ParamCategoryWidget *categoryWidget = CreateCategoryWidget(normalizedData.titles.at(index),
+                                                                   categoryContent,
+                                                                   m_contentWidget);
+        m_categoryWidgets.append(categoryWidget);
+        m_contentLayout->insertWidget(insertIndex + index, categoryWidget);
+    }
+}
+
+void ParamSetWidget::ClearCategoryWidgets()
+{
+    if (!m_contentLayout) {
+        return;
+    }
+
+    for (ParamCategoryWidget *categoryWidget : m_categoryWidgets) {
+        m_contentLayout->removeWidget(categoryWidget);
+        categoryWidget->deleteLater();
+    }
+    m_categoryWidgets.clear();
 }
 
 void ParamSetWidget::OnHelpButtonClicked()
